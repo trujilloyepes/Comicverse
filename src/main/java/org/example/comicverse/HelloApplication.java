@@ -1,11 +1,13 @@
 package org.example.comicverse;
 
+import dataAccess.ConnectionBD;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 public class HelloApplication extends Application {
     @Override
@@ -15,5 +17,12 @@ public class HelloApplication extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+
+        Connection con = ConnectionBD.getConnection();
+        if (con != null) {
+            System.out.println("✅ Conexión OK");
+        } else {
+            System.out.println("❌ Sin conexión");
+        }
     }
 }
