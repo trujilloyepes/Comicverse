@@ -6,34 +6,26 @@ package model;
  * Contiene el atributo id que es común a todas las entidades.
  */
 public abstract class Entidad {
-
-    /** Identificador único de cada entidad */
     private int id;
 
-    /**
-     * Constructor con parámetros.
-     * @param id identificador único de la entidad
-     */
     public Entidad(int id) {
         this.id = id;
     }
 
     /**
-     * Constructor vacío necesario para algunas operaciones.
+     * Constructor vacío, lo necesita JAXB para crear objetos desde XML.
+     * Si no lo pongo, Java lo elimina cuando defino el constructor con parámetros.
      */
     public Entidad() {}
 
-    /**
-     * Getter que devuelve el id de la entidad.
-     * @return id de la entidad
-     */
-    public int getId() { return id; }
 
-    /**
-     * Setter que establece el id de la entidad.
-     * @param id nuevo id
-     */
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     /**
      * Método abstracto que obliga a todas las clases hijas a implementar

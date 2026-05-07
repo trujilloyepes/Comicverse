@@ -1,27 +1,10 @@
 package model;
 
-/**
- * Clase que representa la lectura de un cómic por parte de un perfil
- * Es la clase que gestiona la relación N:M entre Perfil y Cómic
- * añadiendo además la página actual de lectura
- * Hereda de Entidad, por lo que ya tiene el atributo id y sus getters y setters
- */
 public class Lectura extends Entidad {
-    /** Perfil que está leyendo el cómic **/
     private Perfil perfil;
-    /**Cómic que está siendo leído **/
     private  Comic comic;
-    /**Página por la que va el perfil en ese cómic **/
     private int paginaActual;
 
-    /**
-     * Constructor con todos los parámetros.
-     * Llama al constructor de la clase padre (Entidad) con el id.
-     * @param id
-     * @param perfil
-     * @param paginaActual
-     * @param comic
-     */
     public Lectura(int id, Perfil perfil, int paginaActual, Comic comic) {
         super(id);
         this.perfil = perfil;
@@ -30,45 +13,35 @@ public class Lectura extends Entidad {
     }
 
     /**
-     * Constructor vacío necesario para algunas operaciones.
+     * Constructor vacío, lo necesita JAXB para crear objetos desde XML.
+     * Si no lo pongo, Java lo elimina cuando defino el constructor con parámetros.
      */
     public Lectura() {}
 
-    /**
-     * Getter que devuelve el perfil de la lectura
-     * @return
-     */
-    public Perfil getPerfil() {return perfil; }
 
-    /**
-     * Setter que establece el perfil de la lectura
-     * @param perfil
-     */
-    public void setPerfil(Perfil perfil) {this.perfil = perfil; }
+    public Perfil getPerfil() {
+        return perfil;
+    }
 
-    /**
-     * Getters que devuelve el cómic de la lectura
-     * @return
-     */
-    public Comic getComic() {return comic;}
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
+    }
 
-    /**
-     * Setters que devuelve el cómic de la lectura
-     * @param comic
-     */
-    public void setComic(Comic comic) {this.comic = comic; }
+    public Comic getComic() {
+        return comic;
+    }
 
-    /**
-     * Getter que devuelve la página actual de lectura.
-     * @return
-     */
-    public int getPaginaActual() { return paginaActual; }
+    public void setComic(Comic comic) {
+        this.comic = comic;
+    }
 
-    /**
-     * Setters que establece la página actual de la lectura
-     * @param PaginaActual
-     */
-    public void setPaginaActual(int PaginaActual) {this.paginaActual = paginaActual; }
+    public int getPaginaActual() {
+        return paginaActual;
+    }
+
+    public void setPaginaActual(int PaginaActual) {
+        this.paginaActual = paginaActual;
+    }
 
     /**
      * Devuelve una cadena con la información de la lectura.
