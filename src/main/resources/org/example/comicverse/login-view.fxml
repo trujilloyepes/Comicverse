@@ -6,50 +6,22 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="15"
-      xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.comicverse.controller.LoginController"
-      prefWidth="350" prefHeight="400"
-      style="-fx-background-color: #1a1a2e;">
-
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="350.0" spacing="15.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.comicverse.controller.LoginController">
     <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
     </padding>
+    <children>
+        <Label style="-fx-font-size: 24px; -fx-text-fill: red;" text="ComicVerse">
+         <font>
+            <Font name="Comic Sans MS" size="24.0" />
+         </font></Label>
+        <Label style="-fx-text-fill: #aaaaaa;" text="Inicia sesión en tu cuenta" />
+        <TextField fx:id="txtEmail" promptText="Correo electrónico" />
+        <PasswordField fx:id="txtContrasena" promptText="Contraseña" />
+        <Label fx:id="lblError" style="-fx-text-fill: red;" />
+      <Button mnemonicParsing="false" onAction="#handleRegistro" style="-fx-background-color: red;" text="Acceder" textFill="#0d0d0d" />
 
-    <!-- Título -->
-    <Label text="ComicVerse"
-           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-
-    <Label text="Inicia sesión en tu cuenta"
-           style="-fx-font-size: 14px; -fx-text-fill: #aaaaaa;"/>
-
-    <!-- Campo email -->
-    <TextField fx:id="txtEmail"
-               promptText="Correo electrónico"
-               style="-fx-background-color: #2a2a4a; -fx-text-fill: white; -fx-prompt-text-fill: #aaaaaa; -fx-background-radius: 8; -fx-padding: 10;"/>
-
-    <!-- Campo contraseña -->
-    <PasswordField fx:id="txtContrasena"
-                   promptText="Contraseña"
-                   style="-fx-background-color: #2a2a4a; -fx-text-fill: white; -fx-prompt-text-fill: #aaaaaa; -fx-background-radius: 8; -fx-padding: 10;"/>
-
-    <!-- Mensaje de error -->
-    <Label fx:id="lblError"
-           text=""
-           style="-fx-text-fill: #ff4444; -fx-font-size: 12px;"/>
-
-    <!-- Botón entrar -->
-    <Button fx:id="btnEntrar"
-            text="Entrar"
-            onAction="#handleLogin"
-            maxWidth="Infinity"
-            style="-fx-background-color: #e63946; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10;"/>
-
-    <!-- Link registro -->
-    <Label text="¿No tienes cuenta? Regístrate"
-           style="-fx-text-fill: #4dabf7; -fx-cursor: hand;"
-           onMouseClicked="#handleRegistro"/>
-
+        <Label onMouseClicked="#handleRegistro" style="-fx-text-fill: #4dabf7; -fx-cursor: hand;" text="¿No tienes cuenta? Regístrate" />    </children>
 </VBox>

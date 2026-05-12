@@ -3,9 +3,9 @@ module org.example.comicverse {
     requires javafx.fxml;
     requires java.sql;
     requires java.xml.bind;
-    requires jdk.jdi;
 
     opens org.example.comicverse to javafx.fxml;
+    opens org.example.comicverse.controller to javafx.fxml;
     opens dataAccess to java.xml.bind;
     exports org.example.comicverse;
 }
