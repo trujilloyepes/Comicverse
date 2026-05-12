@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
 
-    // Consultas SQL definidas como constantes para evitar repetir código
     private static final String SQL_ALL = "SELECT * FROM usuario";
     private static final String SQL_FIND_BY_ID = "SELECT * FROM usuario WHERE id_usuario = ?";
     private static final String SQL_FIND_BY_EMAIL = "SELECT * FROM usuario WHERE email = ?";
@@ -25,18 +24,18 @@ public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
     private static final String SQL_DELETE = "DELETE FROM usuario WHERE id_usuario = ?";
 
     /**
-     * Devuelve una lista con todos los usuarios de la base de datos.
+     * Método que nos devuelve una lista con todos los usuarios de la base de datos.
      * @return lista con todos los usuarios
      */
     @Override
     public List<Usuario> findAll() {
         List<Usuario> usuarios = new ArrayList<>();
-        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_ALL)) {
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id_usuario");
                 String email = rs.getString("email");
                 String contrasena = rs.getString("contrasena");
-                // El campo administrador es TINYINT(1) en la BBDD, getBoolean lo convierte a boolean
                 boolean administrador = rs.getBoolean("administrador");
                 usuarios.add(new Usuario(id, email, contrasena, administrador));
             }
@@ -47,7 +46,7 @@ public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
     }
 
     /**
-     * Devuelve un usuario buscándolo por su id.
+     * Método que nos devuelve un usuario buscándolo por su id.
      * @param id identificador único del usuario
      * @return objeto Usuario si lo encuentra, null si no existe
      */
@@ -70,7 +69,7 @@ public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
     }
 
     /**
-     * Inserta un nuevo usuario en la base de datos.
+     * Método que nos inserta un nuevo usuario en la base de datos.
      * Comprueba que el email no esté ya registrado antes de insertarlo.
      * @param usuario objeto Usuario a insertar
      * @return true si se ha insertado correctamente, false si no
@@ -78,12 +77,10 @@ public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
     @Override
     public boolean insert(Usuario usuario) {
         boolean inserted = false;
-        // Comprobamos que el usuario no sea null y que el email no esté ya registrado
         if (usuario != null && findByEmail(usuario.getEmail()) == null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
                 ps.setString(1, usuario.getEmail());
                 ps.setString(2, usuario.getContrasena());
-                // Convertimos boolean a int para la BBDD (true=1, false=0)
                 ps.setInt(3, usuario.isAdministrador() ? 1 : 0);
                 ps.executeUpdate();
                 inserted = true;
@@ -95,7 +92,7 @@ public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
     }
 
     /**
-     * Actualiza un usuario existente en la base de datos.
+     * Método que actualiza un usuario existente en la base de datos.
      * Comprueba que el usuario existe antes de actualizarlo.
      * @param usuario objeto Usuario con los nuevos datos
      * @return true si se ha actualizado correctamente, false si no
@@ -103,7 +100,6 @@ public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
     @Override
     public boolean update(Usuario usuario) {
         boolean updated = false;
-        // Comprobamos que el usuario no sea null y que exista en la base de datos
         if (usuario != null && findById(usuario.getId()) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
                 ps.setString(1, usuario.getEmail());
@@ -120,7 +116,7 @@ public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
     }
 
     /**
-     * Elimina un usuario de la base de datos por su id.
+     * Método que elimina un usuario de la base de datos por su id.
      * Comprueba que el usuario existe antes de eliminarlo.
      * @param id identificador del usuario a eliminar
      * @return true si se ha eliminado correctamente, false si no
@@ -128,7 +124,6 @@ public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
     @Override
     public boolean delete(int id) {
         boolean deleted = false;
-        // Comprobamos que el usuario existe antes de intentar eliminarlo
         if (findById(id) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
                 ps.setInt(1, id);
@@ -142,9 +137,7 @@ public class UsuarioDAO implements IDAO<Usuario>, IUsuarioDAO {
     }
 
     /**
-     * Busca un usuario por su email.
-     * Muy útil para el login de la aplicación, ya que el usuario
-     * introduce su email y contraseña para acceder.
+     * Método que busca un usuario por su email.
      * @param email email del usuario a buscar
      * @return objeto Usuario si lo encuentra, null si no existe
      */

@@ -14,12 +14,11 @@ import java.util.List;
 
 /**
  * Clase que implementa las operaciones de acceso a datos para la entidad Suscripcion.
- * Implementa IDAO<Suscripcion> para los métodos CRUD básicos e ISuscripcionDAO para
+ * Implementa IDAO<Suscripcion> para los métodos CRUD básicos y también ISuscripcionDAO para
  * los métodos específicos de Suscripcion.
  */
 public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
 
-    // Consultas SQL definidas como constantes para evitar repetir código
     private static final String SQL_ALL = "SELECT * FROM suscripcion";
     private static final String SQL_FIND_BY_ID = "SELECT * FROM suscripcion WHERE id_suscripcion = ?";
     private static final String SQL_FIND_BY_USUARIO = "SELECT * FROM suscripcion WHERE id_usuario = ?";
@@ -28,19 +27,19 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
     private static final String SQL_DELETE = "DELETE FROM suscripcion WHERE id_suscripcion = ?";
 
     /**
-     * Devuelve una lista con todas las suscripciones de la base de datos.
+     *Método que devuelve una lista con todas las suscripciones de la base de datos.
      * @return lista con todas las suscripciones con su usuario
      */
     public List<Suscripcion> findAllTodasLasSuscripciones() {
         List<Suscripcion> suscripciones = new ArrayList<>();
-        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_ALL)) {
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id_suscripcion");
                 TipoSuscripcion tipo = TipoSuscripcion.valueOf(rs.getString("tipo").toUpperCase());
                 LocalDate fechaInicio = rs.getDate("fecha_inicio").toLocalDate();
                 LocalDate fechaFin = rs.getDate("fecha_fin").toLocalDate();
                 int idUsuario = rs.getInt("id_usuario");
-                // Buscamos el usuario y lo añadimos a la suscripción
                 Usuario usuario = new UsuarioDAO().findById(idUsuario);
                 suscripciones.add(new Suscripcion(id, tipo, fechaInicio, fechaFin, usuario));
             }
@@ -56,7 +55,7 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
     }
 
     /**
-     * Nos devuelve una suscripción buscándola por su id.
+     * Método que nos devuelve una suscripción buscándola por su id.
      * @param id identificador único de la suscripción
      * @return objeto Suscripcion si lo encuentra, null si no existe
      */
@@ -70,7 +69,6 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
                 TipoSuscripcion tipo = TipoSuscripcion.valueOf(rs.getString("tipo").toUpperCase());
                 LocalDate fechaInicio = rs.getDate("fecha_inicio").toLocalDate();
                 LocalDate fechaFin = rs.getDate("fecha_fin").toLocalDate();
-                // dejamos el usuario en null
                 suscripcion = new Suscripcion(id, tipo, fechaInicio, fechaFin, null);
             }
         } catch (SQLException e) {
@@ -80,7 +78,7 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
     }
 
     /**
-     * Inserta una nueva suscripción en la base de datos.
+     * Método que inserta una nueva suscripción en la base de datos.
      * Comprueba que la suscripción no sea null antes de insertarla.
      * @param suscripcion objeto Suscripcion a insertar
      * @return true si se ha insertado correctamente, false si no
@@ -88,12 +86,9 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
     @Override
     public boolean insert(Suscripcion suscripcion) {
         boolean inserted = false;
-        // Comprobamos que la suscripción no sea null y que tenga usuario
         if (suscripcion != null && suscripcion.getUsuario() != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
-                // Convertimos el enum a String en minúsculas para que coincida con nuestra base de datos
                 ps.setString(1, suscripcion.getTipo().name().toLowerCase());
-                // Convertimos LocalDate a Date de SQL
                 ps.setDate(2, Date.valueOf(suscripcion.getFechaInicio()));
                 ps.setDate(3, Date.valueOf(suscripcion.getFechaFin()));
                 ps.setInt(4, suscripcion.getUsuario().getId());
@@ -107,7 +102,7 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
     }
 
     /**
-     * Actualiza una suscripción existente en la base de datos.
+     * Método que actualiza una suscripción existente en la base de datos.
      * Comprueba que la suscripción existe antes de actualizarla.
      * @param suscripcion objeto Suscripcion con los nuevos datos
      * @return true si se ha actualizado correctamente, false si no
@@ -115,7 +110,6 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
     @Override
     public boolean update(Suscripcion suscripcion) {
         boolean updated = false;
-        // Comprobamos que la suscripción no sea null y que exista en la base de datos
         if (suscripcion != null && findById(suscripcion.getId()) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
                 ps.setString(1, suscripcion.getTipo().name().toLowerCase());
@@ -132,15 +126,14 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
     }
 
     /**
-     * Elimina una suscripción de la base de datos por su id.
+     * Método que elimina una suscripción de la base de datos por su id.
      * Comprueba que la suscripción existe antes de eliminarla.
-     * @param id identificador de la suscripción a eliminar
-     * @return true si se ha eliminado correctamente, false si no
+     * @param id
+     * @return
      */
     @Override
     public boolean delete(int id) {
         boolean deleted = false;
-        // Comprobamos que la suscripción existe antes de intentar eliminarla
         if (findById(id) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
                 ps.setInt(1, id);
@@ -154,7 +147,7 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
     }
 
     /**
-     * Busca la suscripción de un usuario concreto.
+     * Método que busca la suscripción de un usuario concreto.
      * Cada usuario solo puede tener una suscripción activa.
      * @param idUsuario identificador del usuario
      * @return objeto Suscripcion si la tiene, null si no tiene suscripción
@@ -170,7 +163,6 @@ public class SuscripcionDAO implements IDAO<Suscripcion>, ISuscripcionDAO {
                 TipoSuscripcion tipo = TipoSuscripcion.valueOf(rs.getString("tipo").toUpperCase());
                 LocalDate fechaInicio = rs.getDate("fecha_inicio").toLocalDate();
                 LocalDate fechaFin = rs.getDate("fecha_fin").toLocalDate();
-                // dejamos el usuario en null
                 suscripcion = new Suscripcion(id, tipo, fechaInicio, fechaFin, null);
             }
         } catch (SQLException e) {

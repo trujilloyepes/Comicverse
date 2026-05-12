@@ -20,13 +20,14 @@ public class GeneroDAO implements IDAO<Genero>, IGeneroDAO {
     private static final String SQL_DELETE = "DELETE FROM genero WHERE id_genero = ?";
 
     /**
-     * Devuelve una lista con todos los géneros de la base de datos.
+     * Método que devuelve una lista con todos los géneros de la base de datos.
      * @return lista con todos los géneros
      */
     @Override
     public List<Genero> findAll() {
         List<Genero> generos = new ArrayList<>();
-        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_ALL)) {
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id_genero");
                 String nombre = rs.getString("nombre");
@@ -39,7 +40,7 @@ public class GeneroDAO implements IDAO<Genero>, IGeneroDAO {
     }
 
     /**
-     * Devuelve un género buscándolo por su id.
+     * Método que devuelve un género buscándolo por su id.
      * @param id identificador único del género
      * @return objeto Género si lo encuentra y si no lo encuentra nos dará null porque no existe
      */
@@ -60,7 +61,7 @@ public class GeneroDAO implements IDAO<Genero>, IGeneroDAO {
     }
 
     /**
-     * Inserta un nuevo género en la base de datos.
+     * Método que inserta un nuevo género en la base de datos.
      * Comprueba que el género no exista ya antes de insertarlo.
      * @param genero objeto Genero a insertar
      * @return true si se ha insertado correctamente, false si no hemos conseguido insertarlo de una forma correcta
@@ -68,7 +69,6 @@ public class GeneroDAO implements IDAO<Genero>, IGeneroDAO {
     @Override
     public boolean insert(Genero genero) {
         boolean inserted = false;
-        // Comprobamos que el género no sea null y que no exista ya en la base de datos
         if (genero != null && findByNombre(genero.getNombre()) == null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
                 ps.setString(1, genero.getNombre());
@@ -82,7 +82,7 @@ public class GeneroDAO implements IDAO<Genero>, IGeneroDAO {
     }
 
     /**
-     * Actualiza un género existente en la base de datos.
+     * Método que actualiza un género existente en la base de datos.
      * Comprueba que el género existe antes de actualizarlo.
      * @param genero objeto Genero con los nuevos datos
      * @return true si se ha actualizado correctamente, false si no
@@ -90,7 +90,6 @@ public class GeneroDAO implements IDAO<Genero>, IGeneroDAO {
     @Override
     public boolean update(Genero genero) {
         boolean updated = false;
-        // Comprobamos que el género no sea null y que exista en la base de datos
         if (genero != null && findById(genero.getId()) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
                 ps.setString(1, genero.getNombre());
@@ -105,7 +104,7 @@ public class GeneroDAO implements IDAO<Genero>, IGeneroDAO {
     }
 
     /**
-     * Elimina un género de la base de datos por su id.
+     * Método que elimina un género de la base de datos por su id.
      * Comprueba que el género existe antes de eliminarlo.
      * @param id identificador del género a eliminar
      * @return true si se ha eliminado correctamente, false si no
@@ -113,7 +112,6 @@ public class GeneroDAO implements IDAO<Genero>, IGeneroDAO {
     @Override
     public boolean delete(int id) {
         boolean deleted = false;
-        // Comprobamos que el género existe antes de intentar eliminarlo
         if (findById(id) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
                 ps.setInt(1, id);
@@ -127,7 +125,7 @@ public class GeneroDAO implements IDAO<Genero>, IGeneroDAO {
     }
 
     /**
-     * Busca un género por su nombre.
+     * Método que busca un género por su nombre.
      * Útil para comprobar si un género ya existe antes de insertarlo.
      * @param nombre nombre del género a buscar
      * @return objeto Genero si lo encuentra, null si no existe

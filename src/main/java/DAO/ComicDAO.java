@@ -20,20 +20,19 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     private static final String SQL_DELETE = "DELETE FROM comic WHERE id_comic = ?";
 
     /**
-     * Devuelve una lista con todos los cómics de la base de datos.
+     * Método que devuelve una lista con todos los cómics de la base de datos.
      * @return lista con todos los cómics
      */
     @Override
     public List<Comic> findAll() {
         List<Comic> comics = new ArrayList<>();
-        try (ResultSet rs = ConnectionBD.getConnection().createStatement().executeQuery(SQL_ALL)) {
+        try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_ALL)) {
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                // Recogemos cada campo de la fila actual
                 int id = rs.getInt("id_comic");
                 String titulo = rs.getString("titulo");
                 String editorial = rs.getString("editorial");
                 String autor = rs.getString("autor");
-                // Creamos el objeto Comic y lo añadimos a la lista
                 comics.add(new Comic(id, titulo, editorial, autor));
             }
         } catch (SQLException e) {
@@ -43,7 +42,7 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     }
 
     /**
-     * Devuelve un cómic buscándolo por su id.
+     * Método que devuelve un cómic buscándolo por su id.
      * @param id identificador único del cómic
      * @return objeto Comic si lo encuentra, null si no existe
      */
@@ -51,7 +50,6 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     public Comic findById(int id) {
         Comic comic = null;
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_ID)) {
-            // Sustituimos el ? por el id que nos pasan
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -67,7 +65,7 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     }
 
     /**
-     * Inserta un nuevo cómic en la base de datos.
+     * Método que inserta un nuevo cómic en la base de datos.
      * Comprueba primero que el cómic no sea null antes de insertarlo.
      * @param comic objeto Comic a insertar
      * @return true si se ha insertado correctamente, false si no
@@ -75,10 +73,8 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     @Override
     public boolean insert(Comic comic) {
         boolean inserted = false;
-        // Comprobamos que el cómic no sea null antes de intentar insertarlo
         if (comic != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_INSERT)) {
-                // Sustituimos cada ? por el valor correspondiente del objeto comic
                 ps.setString(1, comic.getTitulo());
                 ps.setString(2, comic.getEditorial());
                 ps.setString(3, comic.getAutor());
@@ -92,7 +88,7 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     }
 
     /**
-     * Actualiza un cómic existente en la base de datos.
+     * Método que actualiza un cómic existente en la base de datos.
      * Comprueba que el cómic existe antes de actualizarlo.
      * @param comic objeto Comic con los nuevos datos
      * @return true si se ha actualizado correctamente, false si no
@@ -100,7 +96,6 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     @Override
     public boolean update(Comic comic) {
         boolean updated = false;
-        // Comprobamos que el cómic no sea null y que exista en la base de datos
         if (comic != null && findById(comic.getId()) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_UPDATE)) {
                 ps.setString(1, comic.getTitulo());
@@ -117,7 +112,7 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     }
 
     /**
-     * Elimina un cómic de la base de datos por su id.
+     * Método que elimina un cómic de la base de datos por su id.
      * Comprueba que el cómic existe antes de eliminarlo.
      * @param id identificador del cómic a eliminar
      * @return true si se ha eliminado correctamente, false si no
@@ -125,7 +120,6 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     @Override
     public boolean delete(int id) {
         boolean deleted = false;
-        // Comprobamos que el cómic existe antes de intentar eliminarlo
         if (findById(id) != null) {
             try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_DELETE)) {
                 ps.setInt(1, id);
@@ -139,17 +133,15 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     }
 
     /**
-     * Busca cómics que contengan el texto indicado en el título.
-     * Usa LIKE en SQL para buscar coincidencias parciales.
-     * Por ejemplo, si buscas "Bat" devuelve "Batman: Year One", etc...
-     * @param titulo texto a buscar dentro del título
+     * Método que busca cómics que contengan el texto indicado en el título.
+     * Usa LIKE en SQL para buscar coincidencias y filtar los cómics por nombre.
+     * * @param titulo texto a buscar dentro del título
      * @return lista de cómics que contienen ese texto en el título
      */
     @Override
     public List<Comic> findByTitulo(String titulo) {
         List<Comic> comics = new ArrayList<>();
         try (PreparedStatement ps = ConnectionBD.getConnection().prepareStatement(SQL_FIND_BY_TITULO)) {
-            // Los % alrededor del texto permiten buscar coincidencias parciales
             ps.setString(1, "%" + titulo + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -166,7 +158,7 @@ public class ComicDAO implements IDAO<Comic>, IComicDAO {
     }
 
     /**
-     * Busca todos los cómics de una editorial concreta.
+     * Método que busca todos los cómics de una editorial concreta.
      * @param editorial nombre de la editorial a buscar
      * @return lista de cómics de esa editorial
      */
