@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.comicverse.controller.PlanController">
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+    </padding>
+    <children>
+        <Label text="Escoge tu plan" textFill="#f20f0f">
+            <font>
+                <Font name="Dubai Regular" size="31.0" />
+            </font>
+        </Label>
+        <Label text="Selecciona la suscripción que mejor se adapte a ti." textFill="#f50909">
+            <font>
+                <Font name="Dubai Regular" size="14.0" />
+            </font>
+        </Label>
+        <Button fx:id="btnMensual" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleMensual" text="Plan Mensual" />
+        <Button fx:id="btnAnual" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleAnual" text="Plan Anual">
+            <font>
+                <Font name="Dubai Regular" size="12.0" />
+            </font>
+        </Button>
+        <Label fx:id="lblError" textFill="#ff0606" />
+    </children>
+</VBox>
