@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="15.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.comicverse.controller.CatalogoController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <children>
+      <Label text="CATÁLOGO" textFill="#ee0303">
+         <font>
+            <Font name="Dubai Regular" size="35.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtBuscar" onAction="#handleBuscar" promptText="Buscar cómics..." />
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#handleTodos" style="-fx-background-color: red;" text="TODOS">
+               <font>
+                  <Font name="Dubai Regular" size="12.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#handleMarvel" style="-fx-background-color: red;" text="MARVEL" textFill="#141414">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#handleDC" style="-fx-background-color: red;" text="DC">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <FlowPane fx:id="flowPaneComics" hgap="10.0" prefHeight="200.0" prefWidth="760.0" vgap="10.0" />
+      <Label fx:id="lblError" textFill="#fc0707" />
+      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleVolver" style="-fx-background-color: red;" text="Volver" />
+   </children>
+</VBox>

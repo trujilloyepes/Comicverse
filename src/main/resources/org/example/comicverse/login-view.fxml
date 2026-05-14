@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
@@ -12,15 +11,15 @@
     </padding>
     <children>
         <Label style="-fx-font-size: 24px; -fx-text-fill: red;" text="ComicVerse">
-         <font>
-            <Font name="Comic Sans MS" size="24.0" />
-         </font></Label>
+            <font>
+                <Font name="Comic Sans MS" size="24.0" />
+            </font>
+        </Label>
         <Label style="-fx-text-fill: #aaaaaa;" text="Inicia sesión en tu cuenta" />
         <TextField fx:id="txtEmail" promptText="Correo electrónico" />
         <PasswordField fx:id="txtContrasena" promptText="Contraseña" />
-        <Label fx:id="lblError" style="-fx-text-fill: red;" />
-      <Button mnemonicParsing="false" onAction="#handleRegistro" style="-fx-background-color: red;" text="Acceder" textFill="#0d0d0d" />
-
+        <Label fx:id="lblError" style="-fx-text-fill: red;" textFill="red" />
+        <Button fx:id="btnEntrar" mnemonicParsing="false" onAction="#handleLogin" style="-fx-background-color: red;" text="Acceder" textFill="#0d0d0d" />
         <Label onMouseClicked="#handleRegistro" style="-fx-text-fill: #4dabf7; -fx-cursor: hand;" text="¿No tienes cuenta? Regístrate" />
-        </children>
+    </children>
 </VBox>
